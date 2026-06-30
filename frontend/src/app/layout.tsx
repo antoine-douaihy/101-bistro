@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SITE } from "@/constants/site";
 import { getCategories } from "@/services/menu-service";
@@ -7,17 +7,19 @@ import { AppProviders } from "@/providers/app-providers";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+// Grobek — the 101 Bistro brand typeface. Self-hosted via next/font/local and
+// used across the whole site for both body (--font-sans) and display headings
+// (--font-display); see the theme mapping in globals.css.
+const grobek = localFont({
+  src: [
+    { path: "./fonts/grobek/grobek-light.otf", weight: "300", style: "normal" },
+    { path: "./fonts/grobek/grobek-regular.otf", weight: "400", style: "normal" },
+    { path: "./fonts/grobek/grobek-medium.otf", weight: "500", style: "normal" },
+    { path: "./fonts/grobek/grobek-bold.otf", weight: "700", style: "normal" },
+    { path: "./fonts/grobek/grobek-black.otf", weight: "900", style: "normal" },
+  ],
+  variable: "--font-grobek",
   display: "swap",
-});
-
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-fraunces",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -71,7 +73,7 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${fraunces.variable} antialiased`}
+      className={`${grobek.variable} antialiased`}
     >
       <body className="flex min-h-dvh flex-col bg-background text-foreground">
         <AppProviders categories={categories}>

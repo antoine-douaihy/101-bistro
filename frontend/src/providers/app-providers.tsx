@@ -16,8 +16,9 @@ export function AppProviders({
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="light"
-      enableSystem
+      defaultTheme="dark"
+      enableSystem={false}
+      storageKey="theme-101bistro"
       disableTransitionOnChange
     >
       <TooltipProvider delayDuration={200} skipDelayDuration={300}>

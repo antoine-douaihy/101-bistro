@@ -1,22 +1,15 @@
 import Link from "next/link";
-import { ArrowRight, MapPin, Sparkles, Star } from "lucide-react";
-import { SITE } from "@/constants/site";
+import { ArrowRight, MapPin } from "lucide-react";
 import { Container } from "@/components/common/container";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/common/reveal";
 import { Icon } from "@/components/common/icon";
 
 interface HeroProps {
-  productCount: number;
-  categoryCount: number;
   featuredCategories: { id: string; name: string; icon?: string }[];
 }
 
-export function Hero({
-  productCount,
-  categoryCount,
-  featuredCategories,
-}: HeroProps) {
+export function Hero({ featuredCategories }: HeroProps) {
   return (
     <section className="relative overflow-hidden">
       {/* Ambient aurora background */}
@@ -30,27 +23,12 @@ export function Hero({
 
       <Container width="wide" className="pb-16 pt-16 sm:pb-24 sm:pt-24 lg:pt-28">
         <div className="mx-auto max-w-3xl text-center">
-          <Reveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/60 px-3.5 py-1.5 text-xs font-medium text-foreground/80 shadow-card backdrop-blur-sm">
-              <Sparkles className="size-3.5 text-primary" />
-              {SITE.name} · {SITE.address.city}
-            </span>
-          </Reveal>
-
           <Reveal delay={0.06}>
-            <h1 className="mt-6 text-balance font-display text-[2.6rem] font-semibold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
+            <h1 className="text-balance font-display text-[2.6rem] font-semibold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
               A modern bistro,
               <br />
               <span className="text-gradient-brand">plated with intent.</span>
             </h1>
-          </Reveal>
-
-          <Reveal delay={0.12}>
-            <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Seasonal plates, stone-baked pizza, fresh pasta and fire-grilled
-              mains — a {productCount}+ dish menu crafted from the finest
-              ingredients. Browse, discover, and plan your visit.
-            </p>
           </Reveal>
 
           <Reveal delay={0.18}>
@@ -74,18 +52,6 @@ export function Hero({
             </div>
           </Reveal>
 
-          <Reveal delay={0.24}>
-            <div className="mt-10 flex items-center justify-center gap-6 text-sm text-muted-foreground">
-              <Stat value={`${productCount}+`} label="Dishes" />
-              <Divider />
-              <Stat value={`${categoryCount}`} label="Categories" />
-              <Divider />
-              <span className="inline-flex items-center gap-1.5">
-                <Star className="size-4 fill-warning text-warning" />
-                <span className="font-semibold text-foreground">4.8</span> rated
-              </span>
-            </div>
-          </Reveal>
         </div>
 
         {/* Floating category chips */}
@@ -108,19 +74,4 @@ export function Hero({
       </Container>
     </section>
   );
-}
-
-function Stat({ value, label }: { value: string; label: string }) {
-  return (
-    <span className="inline-flex items-baseline gap-1.5">
-      <span className="font-display text-base font-semibold text-foreground">
-        {value}
-      </span>
-      {label}
-    </span>
-  );
-}
-
-function Divider() {
-  return <span className="h-4 w-px bg-border" aria-hidden />;
 }

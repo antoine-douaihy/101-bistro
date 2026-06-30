@@ -6,7 +6,6 @@ import {
 import { Hero } from "@/components/sections/hero";
 import { CategoryShowcase } from "@/components/sections/category-showcase";
 import { FeaturedItems } from "@/components/sections/featured-items";
-import { BrandStory } from "@/components/sections/brand-story";
 import { VisitSection } from "@/components/sections/visit-section";
 import { HomeCta } from "@/components/sections/home-cta";
 
@@ -31,14 +30,9 @@ export default async function HomePage() {
 
   return (
     <>
-      <Hero
-        productCount={stats.productCount}
-        categoryCount={stats.categoryCount}
-        featuredCategories={featuredCategories}
-      />
+      <Hero featuredCategories={featuredCategories} />
       <CategoryShowcase categories={topLevel} />
       <FeaturedItems products={featured} categories={categories} />
-      <BrandStory />
       <VisitSection />
       <HomeCta productCount={stats.productCount} />
     </>

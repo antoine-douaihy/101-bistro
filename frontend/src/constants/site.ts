@@ -30,7 +30,6 @@ export const SITE = {
 export const PRIMARY_NAV: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "Menu", href: "/menu" },
-  { label: "Our Story", href: "/#story" },
   { label: "Visit", href: "/#visit" },
 ];
 
