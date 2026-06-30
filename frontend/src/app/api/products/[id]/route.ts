@@ -2,7 +2,8 @@ import { supabaseServer } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 
 // GET single product
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(_: Request, ctx: { params: Promise<{ id: string }> }) {
+  const params = await ctx.params
   const { data, error } = await supabaseServer
     .from('products')
     .select(`
@@ -21,7 +22,8 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
 }
 
 // PUT update product
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, ctx: { params: Promise<{ id: string }> }) {
+  const params = await ctx.params
   const body = await request.json()
   const { category_id, price, calorie, status, image, image_medium, image_low, video, sort_order, translations } = body
 
@@ -51,7 +53,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 // DELETE product
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_: Request, ctx: { params: Promise<{ id: string }> }) {
+  const params = await ctx.params
   const { error } = await supabaseServer
     .from('products')
     .delete()

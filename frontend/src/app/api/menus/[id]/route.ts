@@ -2,7 +2,8 @@ import { supabaseServer } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 
 // GET single menu
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(_: Request, ctx: { params: Promise<{ id: string }> }) {
+  const params = await ctx.params
   const { data, error } = await supabaseServer
     .from('menus')
     .select(`
@@ -17,7 +18,8 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
 }
 
 // PUT update menu
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, ctx: { params: Promise<{ id: string }> }) {
+  const params = await ctx.params
   const body = await request.json()
   const { status, sort_order, translations } = body
 
@@ -47,7 +49,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 // DELETE menu
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_: Request, ctx: { params: Promise<{ id: string }> }) {
+  const params = await ctx.params
   // Check if menu has categories
   const { count } = await supabaseServer
     .from('categories')
