@@ -1,26 +1,302 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+/* Enable class-based dark mode alongside the system preference */
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------ */
+/*  101 Bistro — Design Tokens                                         */
+/*  Brand: oxblood #321112 · brand red #ec2224 · ivory white          */
+/*  Visual language: iOS 26 — soft layered surfaces, warm neutrals,   */
+/*  generous spacing, glass accents, large radii.                     */
+/* ------------------------------------------------------------------ */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Raw brand */
+  --brand-red: #ec2224;
+  --brand-oxblood: #321112;
+
+  /* Geometry */
+  --radius: 1rem;
+
+  /* Semantic — Light theme (warm ivory) */
+  --background: oklch(0.987 0.005 75);
+  --foreground: oklch(0.205 0.035 25);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.205 0.035 25);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.205 0.035 25);
+
+  --primary: oklch(0.582 0.214 27);
+  --primary-foreground: oklch(0.99 0.01 80);
+
+  --secondary: oklch(0.965 0.01 70);
+  --secondary-foreground: oklch(0.255 0.035 25);
+
+  --muted: oklch(0.962 0.008 75);
+  --muted-foreground: oklch(0.515 0.022 40);
+
+  --accent: oklch(0.955 0.02 45);
+  --accent-foreground: oklch(0.255 0.035 25);
+
+  --destructive: oklch(0.55 0.22 27);
+  --destructive-foreground: oklch(0.99 0.01 80);
+
+  --success: oklch(0.62 0.13 150);
+  --warning: oklch(0.74 0.15 75);
+
+  --border: oklch(0.912 0.01 70);
+  --input: oklch(0.9 0.012 70);
+  --ring: oklch(0.582 0.214 27 / 0.55);
+
+  /* Layered surfaces (iOS-style elevation) */
+  --surface: oklch(1 0 0);
+  --surface-muted: oklch(0.975 0.008 72);
+  --surface-elevated: oklch(1 0 0);
+
+  /* Soft, warm, layered shadows */
+  --shadow-color: 24 30% 16%;
+  --shadow-xs: 0 1px 2px hsl(var(--shadow-color) / 0.06);
+  --shadow-sm: 0 1px 3px hsl(var(--shadow-color) / 0.07), 0 1px 2px hsl(var(--shadow-color) / 0.04);
+  --shadow-md: 0 6px 16px -4px hsl(var(--shadow-color) / 0.1), 0 2px 6px -2px hsl(var(--shadow-color) / 0.06);
+  --shadow-lg: 0 18px 40px -12px hsl(var(--shadow-color) / 0.18), 0 6px 14px -8px hsl(var(--shadow-color) / 0.1);
+  --shadow-xl: 0 30px 60px -18px hsl(var(--shadow-color) / 0.24);
+
+  /* Glass */
+  --glass-bg: oklch(1 0 0 / 0.66);
+  --glass-border: oklch(1 0 0 / 0.5);
 }
 
+.dark {
+  --background: oklch(0.165 0.018 22);
+  --foreground: oklch(0.95 0.012 70);
+
+  --card: oklch(0.205 0.022 22);
+  --card-foreground: oklch(0.95 0.012 70);
+
+  --popover: oklch(0.205 0.022 22);
+  --popover-foreground: oklch(0.95 0.012 70);
+
+  --primary: oklch(0.66 0.205 27);
+  --primary-foreground: oklch(0.16 0.02 25);
+
+  --secondary: oklch(0.255 0.022 22);
+  --secondary-foreground: oklch(0.95 0.012 70);
+
+  --muted: oklch(0.255 0.02 22);
+  --muted-foreground: oklch(0.7 0.018 60);
+
+  --accent: oklch(0.3 0.04 28);
+  --accent-foreground: oklch(0.95 0.012 70);
+
+  --destructive: oklch(0.62 0.21 27);
+  --destructive-foreground: oklch(0.98 0.01 80);
+
+  --success: oklch(0.68 0.13 150);
+  --warning: oklch(0.78 0.15 75);
+
+  --border: oklch(1 0 0 / 0.1);
+  --input: oklch(1 0 0 / 0.14);
+  --ring: oklch(0.66 0.205 27 / 0.6);
+
+  --surface: oklch(0.205 0.022 22);
+  --surface-muted: oklch(0.235 0.022 22);
+  --surface-elevated: oklch(0.255 0.024 22);
+
+  --shadow-color: 0 0% 0%;
+  --shadow-xs: 0 1px 2px hsl(var(--shadow-color) / 0.4);
+  --shadow-sm: 0 1px 3px hsl(var(--shadow-color) / 0.45), 0 1px 2px hsl(var(--shadow-color) / 0.3);
+  --shadow-md: 0 6px 16px -4px hsl(var(--shadow-color) / 0.5), 0 2px 6px -2px hsl(var(--shadow-color) / 0.4);
+  --shadow-lg: 0 18px 40px -12px hsl(var(--shadow-color) / 0.6), 0 6px 14px -8px hsl(var(--shadow-color) / 0.45);
+  --shadow-xl: 0 30px 60px -18px hsl(var(--shadow-color) / 0.7);
+
+  --glass-bg: oklch(0.22 0.02 22 / 0.62);
+  --glass-border: oklch(1 0 0 / 0.08);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Tailwind theme mapping                                            */
+/* ------------------------------------------------------------------ */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-elevated: var(--surface-elevated);
+
+  --color-brand: var(--brand-red);
+  --color-oxblood: var(--brand-oxblood);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  --radius-sm: calc(var(--radius) - 0.5rem);
+  --radius-md: calc(var(--radius) - 0.25rem);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.25rem);
+  --radius-2xl: calc(var(--radius) + 0.5rem);
+  --radius-3xl: calc(var(--radius) + 1rem);
+
+  --shadow-soft: var(--shadow-md);
+  --shadow-card: var(--shadow-sm);
+  --shadow-float: var(--shadow-lg);
+  --shadow-pop: var(--shadow-xl);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --animate-shimmer: shimmer 1.8s ease-in-out infinite;
+  --animate-aurora: aurora 18s ease-in-out infinite alternate;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes aurora {
+  0% { transform: translate3d(-4%, -2%, 0) scale(1.05) rotate(0deg); }
+  100% { transform: translate3d(4%, 3%, 0) scale(1.15) rotate(8deg); }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Base                                                              */
+/* ------------------------------------------------------------------ */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--primary) 22%, transparent);
+    color: var(--foreground);
+  }
+
+  /* Refined focus ring */
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: calc(var(--radius) - 0.5rem);
+  }
+
+  /* Thin, premium scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--muted-foreground) 35%, transparent) transparent;
+  }
+  *::-webkit-scrollbar { height: 8px; width: 8px; }
+  *::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--muted-foreground) 30%, transparent);
+    border-radius: 9999px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ------------------------------------------------------------------ */
+/*  Utilities                                                         */
+/* ------------------------------------------------------------------ */
+@layer utilities {
+  .font-display { font-family: var(--font-display); }
+
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+
+  .glass {
+    background-color: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  .glass-strong {
+    background-color: color-mix(in oklab, var(--glass-bg), var(--background) 22%);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+  }
+
+  .shadow-soft { box-shadow: var(--shadow-md); }
+  .shadow-card { box-shadow: var(--shadow-sm); }
+  .shadow-float { box-shadow: var(--shadow-lg); }
+  .shadow-pop { box-shadow: var(--shadow-xl); }
+
+  /* Brand gradient text — use background-image (not the shorthand) so the
+     optimizer can't reset background-clip back to border-box. */
+  .text-gradient-brand {
+    background-image: linear-gradient(110deg, var(--brand-red), oklch(0.5 0.2 22));
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Skeleton shimmer */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--muted) 100%, transparent) 25%,
+      color-mix(in oklab, var(--muted-foreground) 12%, var(--muted)) 37%,
+      color-mix(in oklab, var(--muted) 100%, transparent) 63%
+    );
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+  }
+
+  /* Hide scrollbar but keep scrollability (category rails) */
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  /* Edge fade mask for horizontal rails */
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
