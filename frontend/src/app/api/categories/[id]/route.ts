@@ -2,14 +2,15 @@ import { supabaseServer } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 
 // GET single category
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const { data, error } = await supabaseServer
     .from('categories')
     .select(`
       id, menu_id, image, image_low, status, sort_order,
       category_translations ( language_id, name, description )
     `)
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 404 })
@@ -17,26 +18,25 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
 }
 
 // PUT update category
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const body = await request.json()
   const { menu_id, image, image_low, status, sort_order, translations } = body
 
-  // Update category
   const { error: catError } = await supabaseServer
     .from('categories')
     .update({ menu_id, image, image_low, status, sort_order })
-    .eq('id', params.id)
+    .eq('id', id)
 
   if (catError) return NextResponse.json({ error: catError.message }, { status: 500 })
 
-  // Update translations
   if (translations) {
     for (const [code, t] of Object.entries(translations) as any) {
       const language_id = code === 'en' ? 1 : code === 'ar' ? 2 : 3
       const { error } = await supabaseServer
         .from('category_translations')
         .upsert(
-          { category_id: Number(params.id), language_id, name: t.name, description: t.description ?? '' },
+          { category_id: Number(id), language_id, name: t.name, description: t.description ?? '' },
           { onConflict: 'category_id,language_id' }
         )
       if (error) return NextResponse.json({ error: error.message }, { status: 500 })
@@ -47,12 +47,13 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 // DELETE category
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  // Check if category has products
+export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
   const { count } = await supabaseServer
     .from('products')
     .select('id', { count: 'exact', head: true })
-    .eq('category_id', params.id)
+    .eq('category_id', id)
 
   if (count && count > 0) {
     return NextResponse.json(
@@ -64,7 +65,7 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   const { error } = await supabaseServer
     .from('categories')
     .delete()
-    .eq('id', params.id)
+    .eq('id', id)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ success: true })

@@ -2,14 +2,15 @@ import { supabaseServer } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 
 // GET single menu
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const { data, error } = await supabaseServer
     .from('menus')
     .select(`
       id, status, sort_order,
       menu_translations ( language_id, name )
     `)
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 404 })
@@ -17,26 +18,25 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
 }
 
 // PUT update menu
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const body = await request.json()
   const { status, sort_order, translations } = body
 
-  // Update menu
   const { error: menuError } = await supabaseServer
     .from('menus')
     .update({ status, sort_order })
-    .eq('id', params.id)
+    .eq('id', id)
 
   if (menuError) return NextResponse.json({ error: menuError.message }, { status: 500 })
 
-  // Update translations
   if (translations) {
     for (const [code, t] of Object.entries(translations) as any) {
       const language_id = code === 'en' ? 1 : code === 'ar' ? 2 : 3
       const { error } = await supabaseServer
         .from('menu_translations')
         .upsert(
-          { menu_id: Number(params.id), language_id, name: t.name },
+          { menu_id: Number(id), language_id, name: t.name },
           { onConflict: 'menu_id,language_id' }
         )
       if (error) return NextResponse.json({ error: error.message }, { status: 500 })
@@ -47,12 +47,13 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 // DELETE menu
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  // Check if menu has categories
+export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
   const { count } = await supabaseServer
     .from('categories')
     .select('id', { count: 'exact', head: true })
-    .eq('menu_id', params.id)
+    .eq('menu_id', id)
 
   if (count && count > 0) {
     return NextResponse.json(
@@ -64,7 +65,7 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   const { error } = await supabaseServer
     .from('menus')
     .delete()
-    .eq('id', params.id)
+    .eq('id', id)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ success: true })
