@@ -44,8 +44,10 @@ export async function SiteFooter() {
           </div>
 
           {/* Copyright */}
-          <p className="text-xs">
-            {fmt(m.footer.rights, { year, name: SITE.name })}
+          <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-xs">
+            <span>{fmt(m.footer.rights, { year, name: SITE.name })}</span>
+            <span aria-hidden className="text-border">·</span>
+            <span>{m.footer.developedBy}</span>
           </p>
         </div>
       </Container>

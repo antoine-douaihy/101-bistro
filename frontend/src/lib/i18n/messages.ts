@@ -70,6 +70,7 @@ const en = {
     friSun: "Fri – Sun",
     late: "late",
     rights: "© {year} {name}. All rights reserved.",
+    developedBy: "Developed by Planck",
     crafted: "Crafted with care · A premium digital menu experience",
   },
 
@@ -229,6 +230,7 @@ const ar: Messages = {
     friSun: "الجمعة – الأحد",
     late: "متأخراً",
     rights: "© {year} {name}. جميع الحقوق محفوظة.",
+    developedBy: "تطوير Planck",
     crafted: "صُنع بعناية · تجربة قائمة رقمية فاخرة",
   },
 
@@ -388,6 +390,7 @@ const ku: Messages = {
     friSun: "هەینی – یەکشەممە",
     late: "درەنگ",
     rights: "© {year} {name}. هەموو مافەکان پارێزراون.",
+    developedBy: "پەرەپێدراوە لەلایەن Planck",
     crafted: "بە وردی دروستکراوە · ئەزموونی مێنیوی دیجیتاڵی پڕیمیۆم",
   },
 

@@ -2,11 +2,23 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "101-bistro",
   "main": ".open-next/worker.js",
-  "compatibility_date": "2025-03-25",
+  "compatibility_date": "2026-07-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "101-bistro"
+    }
+  ],
+  "images": {
+    "binding": "IMAGES"
+  },
+  "observability": {
+    "enabled": true
   },
   // Public Supabase config (the anon/publishable key is safe to expose — it is
   // shipped to the browser too). Available to server code at runtime.
