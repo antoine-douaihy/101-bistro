@@ -1,9 +1,8 @@
 "use client";
 
-import { ChevronDown, LayoutGrid, Rows3, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, LayoutGrid, Rows3 } from "lucide-react";
 import type { SortKey } from "@/types/menu";
 import { SORT_OPTIONS } from "@/constants/menu";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/components/i18n/locale-provider";
 import { SearchBar } from "./search-bar";
@@ -15,8 +14,6 @@ interface MenuToolbarProps {
   onSortChange: (sort: SortKey) => void;
   view: "card" | "row";
   onViewChange: (view: "card" | "row") => void;
-  onOpenFilters: () => void;
-  activeFilterCount: number;
   resultCount: number;
 }
 
@@ -27,8 +24,6 @@ export function MenuToolbar({
   onSortChange,
   view,
   onViewChange,
-  onOpenFilters,
-  activeFilterCount,
   resultCount,
 }: MenuToolbarProps) {
   const { m } = useI18n();
@@ -76,21 +71,6 @@ export function MenuToolbar({
             <Rows3 className="size-4" />
           </ViewButton>
         </div>
-
-        {/* Filters */}
-        <Button
-          variant="outline"
-          onClick={onOpenFilters}
-          className="relative shrink-0"
-        >
-          <SlidersHorizontal className="size-4" />
-          <span className="hidden sm:inline">{m.menu.filters}</span>
-          {activeFilterCount > 0 && (
-            <span className="grid size-5 place-items-center rounded-full bg-primary text-[0.6875rem] font-semibold text-primary-foreground">
-              {activeFilterCount}
-            </span>
-          )}
-        </Button>
       </div>
 
       <p className="text-sm tabular-nums text-muted-foreground sm:hidden">

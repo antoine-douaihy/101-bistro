@@ -12,7 +12,6 @@ import { Icon } from "@/components/common/icon";
 import { CategoryNav } from "./category-nav";
 import { MenuToolbar } from "./menu-toolbar";
 import { ProductGrid } from "./product-grid";
-import { FilterSheet } from "./filter-sheet";
 import { EmptyState } from "./empty-state";
 
 interface MenuBrowserProps {
@@ -44,7 +43,6 @@ export function MenuBrowser({
     setCategory,
     setSort,
     toggleBadge,
-    setAvailableOnly,
     resetAll,
   } = useMenuFilters({
     products,
@@ -52,7 +50,6 @@ export function MenuBrowser({
     initial,
   });
 
-  const [filtersOpen, setFiltersOpen] = React.useState(false);
   const [view, setView] = React.useState<"card" | "row">("card");
 
   // Resolve the active top-level category to highlight its pill in the rail.
@@ -80,8 +77,6 @@ export function MenuBrowser({
             onSortChange={setSort}
             view={view}
             onViewChange={setView}
-            onOpenFilters={() => setFiltersOpen(true)}
-            activeFilterCount={activeFilterCount}
             resultCount={results.length}
           />
         </Container>
@@ -151,18 +146,6 @@ export function MenuBrowser({
           />
         )}
       </Container>
-
-      <FilterSheet
-        open={filtersOpen}
-        onOpenChange={setFiltersOpen}
-        filters={filters}
-        resultCount={results.length}
-        activeFilterCount={activeFilterCount}
-        onToggleBadge={toggleBadge}
-        onSetSort={setSort}
-        onSetAvailableOnly={setAvailableOnly}
-        onResetAll={resetAll}
-      />
     </>
   );
 }

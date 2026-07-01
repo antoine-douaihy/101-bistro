@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { Category } from "@/types/menu";
 import { pluralize } from "@/lib/format";
-import { Icon } from "@/components/common/icon";
+import { MaterialIcon } from "@/components/common/icon";
 import { cn } from "@/lib/utils";
 
 const GRADIENTS = [
@@ -49,7 +49,7 @@ export function CategoryCard({
 
       <div className="flex items-start justify-between">
         <span className="grid size-12 place-items-center rounded-2xl bg-background/70 text-oxblood shadow-card backdrop-blur-sm dark:text-primary">
-          <Icon name={category.icon} className="size-6" />
+          <MaterialIcon name={category.icon} className="size-6 text-2xl" />
         </span>
         <span className="grid size-9 place-items-center rounded-full bg-background/60 text-oxblood opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 dark:text-foreground">
           <ArrowUpRight className="size-4" />

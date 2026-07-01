@@ -1,17 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Check, Clock, Minus, Plus, Star } from "lucide-react";
+import { Check, Clock, Star } from "lucide-react";
 import type { Category, Product, ProductOptionGroup } from "@/types/menu";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/components/i18n/locale-provider";
 import { fmt } from "@/lib/i18n/messages";
 import { Modal } from "@/components/ui/modal";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Icon } from "@/components/common/icon";
+import { MaterialIcon } from "@/components/common/icon";
 import { ProductImage } from "./product-image";
 import { ProductBadges } from "./product-badges";
 import { AvailabilityTag } from "./availability-tag";
@@ -53,8 +51,6 @@ export function ProductDetailModal({
   const { m } = useI18n();
   const [variationId, setVariationId] = React.useState<string | null>(null);
   const [options, setOptions] = React.useState<OptionSelection>({});
-  const [quantity, setQuantity] = React.useState(1);
-  const [added, setAdded] = React.useState(false);
 
   // Reset the configuration when a different product opens. This is the
   // documented "adjust state while rendering on prop change" pattern — cheaper
@@ -65,33 +61,9 @@ export function ProductDetailModal({
     setActiveProductId(product.id);
     setVariationId(init.variationId);
     setOptions(init.options);
-    setQuantity(1);
-    setAdded(false);
   }
 
   if (!product) return null;
-
-  const soldOut = product.availability === "sold-out";
-  const comingSoon = product.availability === "coming-soon";
-
-  const basePrice =
-    product.variations?.find((v) => v.id === variationId)?.price ??
-    product.price;
-
-  const optionsTotal =
-    product.options?.reduce((sum, group) => {
-      const selected = options[group.id] ?? [];
-      return (
-        sum +
-        selected.reduce((s, choiceId) => {
-          const choice = group.choices.find((c) => c.id === choiceId);
-          return s + (choice?.priceDelta ?? 0);
-        }, 0)
-      );
-    }, 0) ?? 0;
-
-  const unitPrice = basePrice + optionsTotal;
-  const total = unitPrice * quantity;
 
   function toggleOption(group: ProductOptionGroup, choiceId: string) {
     setOptions((prev) => {
@@ -106,11 +78,6 @@ export function ProductDetailModal({
       if (group.max && current.length >= group.max) return prev;
       return { ...prev, [group.id]: [...current, choiceId] };
     });
-  }
-
-  function handleAdd() {
-    setAdded(true);
-    window.setTimeout(() => setAdded(false), 1600);
   }
 
   return (
@@ -146,7 +113,7 @@ export function ProductDetailModal({
         <div className="flex-1 overflow-y-auto px-5 pb-4 pt-1 sm:px-7">
           {category && (
             <div className="mb-2 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-primary">
-              <Icon name={category.icon} className="size-3.5" />
+              <MaterialIcon name={category.icon} className="size-3.5 text-sm" />
               {category.name}
             </div>
           )}
@@ -308,75 +275,6 @@ export function ProductDetailModal({
                 </div>
               ) : null}
             </div>
-          )}
-        </div>
-
-        {/* Sticky footer */}
-        <div className="shrink-0 border-t border-border/70 bg-card/95 px-5 py-3.5 backdrop-blur-md sm:px-7">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center rounded-xl border border-border bg-background">
-              <button
-                type="button"
-                aria-label={m.menu.decreaseQty}
-                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                disabled={quantity <= 1 || soldOut}
-                className="grid size-10 place-items-center rounded-s-xl text-foreground transition-colors hover:bg-accent disabled:opacity-40"
-              >
-                <Minus className="size-4" />
-              </button>
-              <span className="w-8 text-center text-sm font-semibold tabular-nums">
-                {quantity}
-              </span>
-              <button
-                type="button"
-                aria-label={m.menu.increaseQty}
-                onClick={() => setQuantity((q) => Math.min(20, q + 1))}
-                disabled={soldOut}
-                className="grid size-10 place-items-center rounded-e-xl text-foreground transition-colors hover:bg-accent disabled:opacity-40"
-              >
-                <Plus className="size-4" />
-              </button>
-            </div>
-
-            <Button
-              size="lg"
-              className="flex-1"
-              disabled={soldOut || comingSoon}
-              onClick={handleAdd}
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                {added ? (
-                  <motion.span
-                    key="added"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    className="inline-flex items-center gap-2"
-                  >
-                    <Check className="size-4.5" /> {m.menu.added}
-                  </motion.span>
-                ) : (
-                  <motion.span
-                    key="add"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    className="inline-flex items-center gap-2"
-                  >
-                    {soldOut
-                      ? m.menu.soldOut
-                      : comingSoon
-                        ? m.menu.comingSoon
-                        : `${m.menu.add} · ${formatPrice(total, product.currency)}`}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </Button>
-          </div>
-          {!soldOut && !comingSoon && (
-            <p className="mt-2 text-center text-xs text-muted-foreground">
-              {m.menu.onlineSoon}
-            </p>
           )}
         </div>
       </div>

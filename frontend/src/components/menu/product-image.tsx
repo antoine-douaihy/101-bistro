@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { ProductImage as ProductImageType } from "@/types/menu";
-import { Icon } from "@/components/common/icon";
+import { MaterialIcon } from "@/components/common/icon";
 import { cn } from "@/lib/utils";
 
 /**
@@ -93,9 +93,9 @@ export function ProductImage({
         >
           {/* soft sheen */}
           <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-10%,rgba(255,255,255,0.55),transparent_60%)] dark:bg-[radial-gradient(120%_80%_at_50%_-10%,rgba(255,255,255,0.08),transparent_60%)]" />
-          <Icon
+          <MaterialIcon
             name={iconName}
-            className="size-12 text-oxblood/25 dark:text-white/20"
+            className="size-12 text-5xl text-oxblood/25 dark:text-white/20"
           />
         </div>
       )}

@@ -19,7 +19,7 @@ export type Locale = "en" | "ar" | "fr";
  */
 export type LocalizedText = string;
 
-export type Currency = "USD" | "EUR" | "LBP";
+export type Currency = "USD" | "EUR" | "LBP" | "IQD";
 
 export interface Money {
   amount: number;
@@ -136,7 +136,7 @@ export interface Category {
   slug: string;
   name: LocalizedText;
   description?: LocalizedText;
-  /** Lucide icon name, resolved at render time. */
+  /** Material Symbols icon name, resolved at render time. */
   icon?: string;
   image?: ProductImage;
   /** Null/undefined for top-level; set for nested categories. */

@@ -1,12 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Plus } from "lucide-react";
 import type { Product } from "@/types/menu";
 import { useProductModal } from "@/providers/product-modal-provider";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/components/i18n/locale-provider";
-import { fmt } from "@/lib/i18n/messages";
 import { ProductImage } from "./product-image";
 import { ProductBadges } from "./product-badges";
 import { AvailabilityTag } from "./availability-tag";
@@ -86,17 +84,6 @@ function ProductCardGrid({
           </div>
         )}
 
-        {/* quick add (UI only — future ordering) */}
-        {!soldOut && (
-          <button
-            type="button"
-            aria-label={fmt(m.menu.quickView, { name: product.name })}
-            onClick={open}
-            className="absolute bottom-3 end-3 z-10 grid size-9 place-items-center rounded-full bg-background/85 text-foreground shadow-card backdrop-blur-md transition-all duration-200 hover:bg-primary hover:text-primary-foreground active:scale-90"
-          >
-            <Plus className="size-4.5" />
-          </button>
-        )}
       </div>
 
       {/* Fixed layout so every card is the same height in every language:

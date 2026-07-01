@@ -12,6 +12,7 @@ import type {
 } from "@/types/menu";
 import { slugify } from "@/lib/format";
 import { DEFAULT_LOCALE } from "@/lib/locale";
+import { resolveCategoryIcon } from "@/lib/category-icons";
 
 /**
  * Adapter: backend (Supabase) shape  ->  design/component shape.
@@ -25,7 +26,7 @@ import { DEFAULT_LOCALE } from "@/lib/locale";
  * cookie in the service layer); everything falls back to English then to the
  * first available translation, so a missing translation never renders blank.
  */
-const MENU_CURRENCY: Currency = "USD";
+const MENU_CURRENCY: Currency = "IQD";
 
 type Translatable = Partial<Record<Lang, { name?: string; description?: string }>>;
 
@@ -84,6 +85,7 @@ export function mapCategory(c: DbCategory, locale: Lang = DEFAULT_LOCALE): Categ
     description: pick(c.translations, "description", locale),
     parentId: null,
     order: c.sort_order,
+    icon: resolveCategoryIcon(c.translations?.en?.name ?? name),
     itemCount: c.products?.length ?? 0,
     image: c.image ? { src: c.image, alt: name } : undefined,
   };

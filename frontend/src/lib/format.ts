@@ -4,12 +4,14 @@ const CURRENCY_LOCALE: Record<Currency, string> = {
   USD: "en-US",
   EUR: "en-IE",
   LBP: "en-LB",
+  IQD: "en-IQ",
 };
 
 const CURRENCY_FRACTION: Record<Currency, number> = {
   USD: 2,
   EUR: 2,
   LBP: 0,
+  IQD: 0,
 };
 
 /**
@@ -18,7 +20,7 @@ const CURRENCY_FRACTION: Record<Currency, number> = {
  */
 export function formatPrice(
   amount: number,
-  currency: Currency = "USD",
+  currency: Currency = "IQD",
   opts?: { withSymbol?: boolean }
 ): string {
   const withSymbol = opts?.withSymbol ?? true;

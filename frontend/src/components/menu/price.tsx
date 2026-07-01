@@ -20,7 +20,7 @@ const sizes = {
 
 export function Price({
   amount,
-  currency = "USD",
+  currency = "IQD",
   compareAt,
   className,
   size = "default",

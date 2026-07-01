@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import type { Category } from "@/types/menu";
-import { Icon } from "@/components/common/icon";
+import { MaterialIcon } from "@/components/common/icon";
 import { cn } from "@/lib/utils";
 
 interface CategoryNavProps {
@@ -94,7 +94,9 @@ const CategoryPill = React.forwardRef<
         : "border-border/70 bg-background/60 text-foreground/80 backdrop-blur-sm hover:border-border hover:bg-accent hover:text-foreground"
     )}
   >
-    {iconName && <Icon name={iconName} className="size-4 opacity-80" />}
+    {iconName && (
+      <MaterialIcon name={iconName} className="size-4 text-base opacity-80" />
+    )}
     {label}
     {count != null && (
       <span

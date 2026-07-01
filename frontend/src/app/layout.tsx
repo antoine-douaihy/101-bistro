@@ -78,6 +78,13 @@ export default async function RootLayout({
       className={`${inter.variable} ${fraunces.variable} antialiased`}
     >
       <body className="flex min-h-dvh flex-col bg-background text-foreground">
+        {/* React hoists this stylesheet <link> into <head>. Loads Google
+            Material Symbols for the data-driven category icons. */}
+        <link
+          rel="stylesheet"
+          precedence="default"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        />
         <AppProviders categories={categories} locale={locale}>
           <SiteHeader categories={categories} locale={locale} />
           <main className="flex-1">{children}</main>

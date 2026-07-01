@@ -34,7 +34,7 @@ export const SITE = {
     instagram:
       "https://www.instagram.com/101bistro.erbil?igsh=MTRpenJoYzVvcmg5",
   },
-  defaultCurrency: "USD" as const,
+  defaultCurrency: "IQD" as const,
 } as const;
 
 export const PRIMARY_NAV: NavItem[] = [
