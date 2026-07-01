@@ -5,6 +5,8 @@ import { Plus } from "lucide-react";
 import type { Product } from "@/types/menu";
 import { useProductModal } from "@/providers/product-modal-provider";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/locale-provider";
+import { fmt } from "@/lib/i18n/messages";
 import { ProductImage } from "./product-image";
 import { ProductBadges } from "./product-badges";
 import { AvailabilityTag } from "./availability-tag";
@@ -44,6 +46,7 @@ function ProductCardGrid({
   priority,
   className,
 }: ProductCardProps) {
+  const { m } = useI18n();
   const open = useOpen(product);
   const soldOut = product.availability === "sold-out";
   const { amount, from } = priceFrom(product);
@@ -70,7 +73,7 @@ function ProductCardGrid({
 
         {/* badges */}
         {product.badges?.length ? (
-          <div className="pointer-events-none absolute left-3 top-3">
+          <div className="pointer-events-none absolute start-3 top-3">
             <ProductBadges badges={product.badges} max={2} size="sm" />
           </div>
         ) : null}
@@ -78,7 +81,7 @@ function ProductCardGrid({
         {soldOut && (
           <div className="absolute inset-0 grid place-items-center bg-oxblood/35 backdrop-blur-[2px]">
             <span className="rounded-full bg-background/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-foreground shadow-card">
-              Sold out
+              {m.menu.soldOut}
             </span>
           </div>
         )}
@@ -87,35 +90,30 @@ function ProductCardGrid({
         {!soldOut && (
           <button
             type="button"
-            aria-label={`Quick view ${product.name}`}
+            aria-label={fmt(m.menu.quickView, { name: product.name })}
             onClick={open}
-            className="absolute bottom-3 right-3 z-10 grid size-9 place-items-center rounded-full bg-background/85 text-foreground shadow-card backdrop-blur-md transition-all duration-200 hover:bg-primary hover:text-primary-foreground active:scale-90"
+            className="absolute bottom-3 end-3 z-10 grid size-9 place-items-center rounded-full bg-background/85 text-foreground shadow-card backdrop-blur-md transition-all duration-200 hover:bg-primary hover:text-primary-foreground active:scale-90"
           >
             <Plus className="size-4.5" />
           </button>
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="font-display text-[1.0625rem] font-semibold leading-snug tracking-tight">
-            <button
-              type="button"
-              onClick={open}
-              className="text-left outline-none after:absolute after:inset-0 after:content-[''] after:rounded-2xl focus-visible:after:ring-2 focus-visible:after:ring-ring"
-            >
-              {product.name}
-            </button>
-          </h3>
-        </div>
+      {/* Fixed layout so every card is the same height in every language:
+          the name always reserves two lines and the price sits at the bottom.
+          The full description is shown in the detail modal on click. */}
+      <div className="flex flex-1 flex-col gap-1.5 p-3">
+        <h3 className="line-clamp-2 min-h-[2.7em] font-display text-[0.95rem] font-semibold leading-snug tracking-tight">
+          <button
+            type="button"
+            onClick={open}
+            className="text-start outline-none after:absolute after:inset-0 after:content-[''] after:rounded-2xl focus-visible:after:ring-2 focus-visible:after:ring-ring"
+          >
+            {product.name}
+          </button>
+        </h3>
 
-        {product.shortDescription && (
-          <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-            {product.shortDescription}
-          </p>
-        )}
-
-        <div className="mt-auto flex items-center justify-between gap-2 pt-1.5">
+        <div className="mt-auto flex items-center justify-between gap-2 pt-0.5">
           <Price amount={amount} currency={product.currency} from={from} compareAt={product.compareAtPrice} />
           <div className="flex items-center gap-2">
             {product.spiceLevel ? <SpiceMeter level={product.spiceLevel} /> : null}
@@ -136,7 +134,7 @@ function ProductRow({ product, iconName, className }: ProductCardProps) {
   return (
     <article
       className={cn(
-        "group relative flex items-center gap-4 rounded-2xl border border-transparent p-2.5 pr-3 transition-colors duration-200 hover:border-border/70 hover:bg-card focus-within:border-border/70 focus-within:bg-card",
+        "group relative flex items-center gap-4 rounded-2xl border border-transparent p-2.5 pe-3 transition-colors duration-200 hover:border-border/70 hover:bg-card focus-within:border-border/70 focus-within:bg-card",
         soldOut && "opacity-70",
         className
       )}
@@ -157,7 +155,7 @@ function ProductRow({ product, iconName, className }: ProductCardProps) {
             <button
               type="button"
               onClick={open}
-              className="text-left outline-none after:absolute after:inset-0 after:content-[''] after:rounded-2xl focus-visible:after:ring-2 focus-visible:after:ring-ring"
+              className="text-start outline-none after:absolute after:inset-0 after:content-[''] after:rounded-2xl focus-visible:after:ring-2 focus-visible:after:ring-ring"
             >
               {product.name}
             </button>
@@ -171,12 +169,6 @@ function ProductRow({ product, iconName, className }: ProductCardProps) {
             className="shrink-0"
           />
         </div>
-
-        {product.shortDescription && (
-          <p className="mt-0.5 line-clamp-1 text-sm text-muted-foreground">
-            {product.shortDescription}
-          </p>
-        )}
 
         <div className="mt-1.5 flex items-center gap-2.5">
           <ProductBadges badges={product.badges} max={2} size="sm" />

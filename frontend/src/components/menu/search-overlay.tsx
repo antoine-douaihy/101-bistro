@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, TrendingUp } from "lucide-react";
 import type { Category } from "@/types/menu";
 import { Icon } from "@/components/common/icon";
+import { useI18n } from "@/components/i18n/locale-provider";
 import { SearchBar } from "./search-bar";
 
 const POPULAR_SEARCHES = ["Truffle", "Vegan", "Pizza", "Grill", "Dessert", "Spicy"];
@@ -28,6 +29,7 @@ export function SearchOverlay({
   categories,
 }: SearchOverlayProps) {
   const router = useRouter();
+  const { m } = useI18n();
   const [query, setQuery] = React.useState("");
 
   const topLevel = categories
@@ -66,7 +68,7 @@ export function SearchOverlay({
                   className="w-full max-w-xl overflow-hidden rounded-3xl border border-border/60 bg-card text-card-foreground shadow-pop"
                 >
                   <VisuallyHidden asChild>
-                    <Dialog.Title>Search the menu</Dialog.Title>
+                    <Dialog.Title>{m.header.searchAria}</Dialog.Title>
                   </VisuallyHidden>
 
                   <div className="p-3 sm:p-4">
@@ -75,7 +77,7 @@ export function SearchOverlay({
                       onChange={setQuery}
                       size="lg"
                       autoFocus
-                      placeholder="Search 101 Bistro…"
+                      placeholder={m.search.overlayPlaceholder}
                       onSubmit={(v) =>
                         go(`/menu${v.trim() ? `?q=${encodeURIComponent(v.trim())}` : ""}`)
                       }
@@ -84,7 +86,7 @@ export function SearchOverlay({
 
                   <div className="max-h-[55vh] overflow-y-auto border-t border-border/60 px-4 py-4">
                     <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                      <TrendingUp className="size-3.5" /> Popular
+                      <TrendingUp className="size-3.5" /> {m.search.popular}
                     </p>
                     <div className="mb-6 flex flex-wrap gap-2">
                       {POPULAR_SEARCHES.map((term) => (
@@ -100,7 +102,7 @@ export function SearchOverlay({
                     </div>
 
                     <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                      Browse by category
+                      {m.search.browseByCategory}
                     </p>
                     <div className="grid gap-1">
                       {topLevel.map((c) => (
@@ -108,7 +110,7 @@ export function SearchOverlay({
                           key={c.id}
                           type="button"
                           onClick={() => go(`/menu?category=${c.slug}`)}
-                          className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-accent"
+                          className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-start transition-colors hover:bg-accent"
                         >
                           <span className="grid size-9 place-items-center rounded-lg bg-surface-muted text-primary">
                             <Icon name={c.icon} className="size-4.5" />

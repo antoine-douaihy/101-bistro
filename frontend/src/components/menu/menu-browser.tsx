@@ -5,6 +5,7 @@ import { UtensilsCrossed, X } from "lucide-react";
 import type { Category, MenuFilterState, Product } from "@/types/menu";
 import { BADGE_META } from "@/constants/menu";
 import { useMenuFilters } from "@/hooks/use-menu-filters";
+import { useI18n } from "@/components/i18n/locale-provider";
 import { Container } from "@/components/common/container";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/common/icon";
@@ -25,6 +26,7 @@ export function MenuBrowser({
   categories,
   initial,
 }: MenuBrowserProps) {
+  const { m } = useI18n();
   const topLevel = React.useMemo(
     () =>
       categories
@@ -53,20 +55,12 @@ export function MenuBrowser({
   const [filtersOpen, setFiltersOpen] = React.useState(false);
   const [view, setView] = React.useState<"card" | "row">("card");
 
-  // Resolve the active top-level category to optionally show a sub-rail.
+  // Resolve the active top-level category to highlight its pill in the rail.
   const activeRootId = React.useMemo(() => {
     if (!filters.categoryId) return null;
     const active = categories.find((c) => c.id === filters.categoryId);
     return active?.parentId ?? active?.id ?? null;
   }, [filters.categoryId, categories]);
-
-  const subCategories = React.useMemo(
-    () =>
-      categories
-        .filter((c) => c.parentId === activeRootId)
-        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
-    [categories, activeRootId]
-  );
 
   return (
     <>
@@ -77,17 +71,8 @@ export function MenuBrowser({
             categories={topLevel}
             activeId={activeRootId}
             onSelect={setCategory}
+            allLabel={m.menu.all}
           />
-          {subCategories.length > 0 && (
-            <CategoryNav
-              categories={subCategories}
-              activeId={filters.categoryId}
-              onSelect={(id) => setCategory(id ?? activeRootId)}
-              includeAll
-              allLabel="All in section"
-              className="opacity-90"
-            />
-          )}
           <MenuToolbar
             query={filters.query}
             onQueryChange={setQuery}
@@ -109,11 +94,11 @@ export function MenuBrowser({
             <span className="font-semibold tabular-nums text-foreground">
               {results.length}
             </span>{" "}
-            {isSearching ? "results" : "dishes"}
+            {isSearching ? m.menu.results : m.menu.dishes}
             {isSearching && filters.query && (
               <>
                 {" "}
-                for{" "}
+                {m.menu.resultsFor}{" "}
                 <span className="font-medium text-foreground">
                   “{filters.query}”
                 </span>
@@ -130,7 +115,7 @@ export function MenuBrowser({
               className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/15"
             >
               <Icon name={BADGE_META[badge].icon} className="size-3" />
-              {BADGE_META[badge].label}
+              {m.badges[badge]}
               <X className="size-3" />
             </button>
           ))}
@@ -141,7 +126,7 @@ export function MenuBrowser({
               onClick={resetAll}
               className="text-xs font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
             >
-              Clear all
+              {m.menu.clearAll}
             </button>
           )}
         </div>
@@ -156,11 +141,11 @@ export function MenuBrowser({
         ) : (
           <EmptyState
             icon={UtensilsCrossed}
-            title="No dishes match your search"
-            description="Try a different keyword, remove a filter, or browse another category. Our full menu has plenty to discover."
+            title={m.menu.emptyTitle}
+            description={m.menu.emptyDescription}
             action={
               <Button onClick={resetAll} variant="outline">
-                Clear filters
+                {m.menu.clearFilters}
               </Button>
             }
           />

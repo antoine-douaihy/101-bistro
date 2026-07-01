@@ -183,6 +183,8 @@ export interface NavItem {
   label: string;
   href: string;
   external?: boolean;
+  /** Key into the i18n `nav` messages for localized labels. */
+  key?: "home" | "menu" | "visit";
 }
 
 export interface OpeningHours {

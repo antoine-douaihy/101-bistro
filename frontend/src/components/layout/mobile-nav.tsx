@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Logo } from "@/components/brand/logo";
 import { Icon } from "@/components/common/icon";
+import { useI18n } from "@/components/i18n/locale-provider";
 
 interface MobileNavProps {
   open: boolean;
@@ -17,6 +18,7 @@ interface MobileNavProps {
 }
 
 export function MobileNav({ open, onOpenChange, categories }: MobileNavProps) {
+  const { m, dir } = useI18n();
   const topLevel = categories
     .filter((c) => !c.parentId)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
@@ -24,7 +26,12 @@ export function MobileNav({ open, onOpenChange, categories }: MobileNavProps) {
   const close = () => onOpenChange(false);
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} title="Menu" side="left">
+    <Sheet
+      open={open}
+      onOpenChange={onOpenChange}
+      title={m.nav.menu}
+      side={dir === "rtl" ? "right" : "left"}
+    >
       <div className="flex items-center gap-2.5 px-5 pb-5 pt-6">
         <Logo height={30} tone="brand" />
       </div>
@@ -38,14 +45,14 @@ export function MobileNav({ open, onOpenChange, categories }: MobileNavProps) {
             onClick={close}
             className="rounded-xl px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-accent"
           >
-            {item.label}
+            {item.key ? m.nav[item.key] : item.label}
           </Link>
         ))}
       </nav>
 
       <div className="flex-1 overflow-y-auto px-3 pb-4">
         <p className="px-3 pb-2 pt-2 text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground">
-          Categories
+          {m.nav.categories}
         </p>
         <div className="grid gap-0.5">
           {topLevel.map((c) => (
@@ -73,7 +80,7 @@ export function MobileNav({ open, onOpenChange, categories }: MobileNavProps) {
       <div className="space-y-3 px-5 py-4">
         <Button asChild size="lg" className="w-full" onClick={close}>
           <Link href="/menu">
-            Explore the full menu <ArrowRight className="size-4" />
+            {m.nav.exploreFull} <ArrowRight className="size-4 rtl:-scale-x-100" />
           </Link>
         </Button>
         <p className="text-center text-xs text-muted-foreground">

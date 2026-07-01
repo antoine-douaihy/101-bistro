@@ -5,6 +5,7 @@ import type { SortKey } from "@/types/menu";
 import { SORT_OPTIONS } from "@/constants/menu";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/locale-provider";
 import { SearchBar } from "./search-bar";
 
 interface MenuToolbarProps {
@@ -30,30 +31,32 @@ export function MenuToolbar({
   activeFilterCount,
   resultCount,
 }: MenuToolbarProps) {
+  const { m } = useI18n();
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <SearchBar
         value={query}
         onChange={onQueryChange}
+        placeholder={m.search.placeholder}
         className="sm:max-w-md"
       />
 
-      <div className="flex items-center gap-2 sm:ml-auto">
+      <div className="flex items-center gap-2 sm:ms-auto">
         {/* Sort (desktop inline) */}
         <div className="relative hidden sm:block">
           <select
-            aria-label="Sort dishes"
+            aria-label={m.menu.sortAria}
             value={sort}
             onChange={(e) => onSortChange(e.target.value as SortKey)}
-            className="h-11 cursor-pointer appearance-none rounded-xl border border-border bg-background/60 pl-4 pr-9 text-sm font-medium text-foreground shadow-xs backdrop-blur-sm transition-colors hover:bg-accent focus-visible:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-11 cursor-pointer appearance-none rounded-xl border border-border bg-background/60 ps-4 pe-9 text-sm font-medium text-foreground shadow-xs backdrop-blur-sm transition-colors hover:bg-accent focus-visible:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {SORT_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
-                {opt.label}
+                {m.sort[opt.value]}
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <ChevronDown className="pointer-events-none absolute end-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         </div>
 
         {/* View toggle */}
@@ -61,14 +64,14 @@ export function MenuToolbar({
           <ViewButton
             active={view === "card"}
             onClick={() => onViewChange("card")}
-            label="Grid view"
+            label={m.menu.gridView}
           >
             <LayoutGrid className="size-4" />
           </ViewButton>
           <ViewButton
             active={view === "row"}
             onClick={() => onViewChange("row")}
-            label="List view"
+            label={m.menu.listView}
           >
             <Rows3 className="size-4" />
           </ViewButton>
@@ -81,7 +84,7 @@ export function MenuToolbar({
           className="relative shrink-0"
         >
           <SlidersHorizontal className="size-4" />
-          <span className="hidden sm:inline">Filters</span>
+          <span className="hidden sm:inline">{m.menu.filters}</span>
           {activeFilterCount > 0 && (
             <span className="grid size-5 place-items-center rounded-full bg-primary text-[0.6875rem] font-semibold text-primary-foreground">
               {activeFilterCount}
@@ -91,7 +94,7 @@ export function MenuToolbar({
       </div>
 
       <p className="text-sm tabular-nums text-muted-foreground sm:hidden">
-        {resultCount} dishes
+        {resultCount} {m.menu.dishes}
       </p>
     </div>
   );

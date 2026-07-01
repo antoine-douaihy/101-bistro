@@ -5,16 +5,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Search } from "lucide-react";
 import type { Category } from "@/types/menu";
+import type { Lang } from "@/types";
 import { PRIMARY_NAV, SITE } from "@/constants/site";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/locale-provider";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { SearchOverlay } from "@/components/menu/search-overlay";
 import { MobileNav } from "./mobile-nav";
 
-export function SiteHeader({ categories }: { categories: Category[] }) {
+export function SiteHeader({
+  categories,
+  locale,
+}: {
+  categories: Category[];
+  locale: Lang;
+}) {
   const pathname = usePathname();
+  const { m } = useI18n();
   const [scrolled, setScrolled] = React.useState(false);
   const [searchOpen, setSearchOpen] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -61,7 +71,7 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="ml-4 hidden items-center gap-1 lg:flex">
+        <nav className="ms-4 hidden items-center gap-1 lg:flex">
           {PRIMARY_NAV.map((item) => (
             <Link
               key={item.href}
@@ -73,7 +83,7 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              {item.label}
+              {item.key ? m.nav[item.key] : item.label}
               {isActive(item.href) && (
                 <span className="absolute inset-x-3.5 -bottom-0.5 h-0.5 rounded-full bg-primary" />
               )}
@@ -81,15 +91,15 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+        <div className="ms-auto flex items-center gap-1.5 sm:gap-2">
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
-            aria-label="Search the menu"
-            className="group hidden items-center gap-2 rounded-full border border-border/70 bg-background/50 py-2 pl-3.5 pr-2 text-sm text-muted-foreground backdrop-blur-sm transition-colors hover:bg-accent hover:text-foreground sm:flex"
+            aria-label={m.header.searchAria}
+            className="group hidden items-center gap-2 rounded-full border border-border/70 bg-background/50 py-2 ps-3.5 pe-2 text-sm text-muted-foreground backdrop-blur-sm transition-colors hover:bg-accent hover:text-foreground sm:flex"
           >
             <Search className="size-4" />
-            <span className="hidden md:inline">Search…</span>
+            <span className="hidden md:inline">{m.header.searchShort}</span>
             <kbd className="hidden rounded-md border border-border bg-muted px-1.5 py-0.5 font-sans text-[0.6875rem] font-medium text-muted-foreground md:inline">
               ⌘K
             </kbd>
@@ -98,22 +108,24 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
-            aria-label="Search the menu"
+            aria-label={m.header.searchAria}
             className="grid size-10 place-items-center rounded-full border border-border/70 bg-background/50 text-foreground/80 backdrop-blur-sm transition-colors hover:bg-accent hover:text-foreground sm:hidden"
           >
             <Search className="size-[1.15rem]" />
           </button>
 
+          <LanguageSwitcher locale={locale} />
+
           <ThemeToggle />
 
           <Button asChild className="hidden sm:inline-flex" pill>
-            <Link href="/menu">View Menu</Link>
+            <Link href="/menu">{m.header.viewMenu}</Link>
           </Button>
 
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
+            aria-label={m.header.viewMenu}
             className="grid size-10 place-items-center rounded-full border border-border/70 bg-background/50 text-foreground/80 backdrop-blur-sm transition-colors hover:bg-accent hover:text-foreground lg:hidden"
           >
             <Menu className="size-[1.15rem]" />

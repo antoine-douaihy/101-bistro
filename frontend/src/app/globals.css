@@ -149,8 +149,13 @@
   --color-brand: var(--brand-red);
   --color-oxblood: var(--brand-oxblood);
 
-  --font-sans: var(--font-grobek), ui-serif, Georgia, serif;
-  --font-display: var(--font-grobek), ui-serif, Georgia, serif;
+  /* Latin faces (Inter / Fraunces) carry no Arabic glyphs, so Arabic/Kurdish
+     script falls through — per glyph — to a proper Arabic stack while Latin
+     stays on-brand. This keeps the English chrome consistent and RTL readable. */
+  --font-sans: var(--font-inter), "Noto Naskh Arabic", "Segoe UI", Tahoma,
+    "Geeza Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), "Noto Kufi Arabic", "Segoe UI", Tahoma,
+    "Geeza Pro", ui-serif, Georgia, serif;
 
   --radius-sm: calc(var(--radius) - 0.5rem);
   --radius-md: calc(var(--radius) - 0.25rem);

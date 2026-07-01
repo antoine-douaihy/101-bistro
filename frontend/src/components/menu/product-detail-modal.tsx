@@ -6,6 +6,8 @@ import { Check, Clock, Minus, Plus, Star } from "lucide-react";
 import type { Category, Product, ProductOptionGroup } from "@/types/menu";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/locale-provider";
+import { fmt } from "@/lib/i18n/messages";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -48,6 +50,7 @@ export function ProductDetailModal({
   open,
   onOpenChange,
 }: ProductDetailModalProps) {
+  const { m } = useI18n();
   const [variationId, setVariationId] = React.useState<string | null>(null);
   const [options, setOptions] = React.useState<OptionSelection>({});
   const [quantity, setQuantity] = React.useState(1);
@@ -133,7 +136,7 @@ export function ProductDetailModal({
           />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-card to-transparent" />
           {product.badges?.length ? (
-            <div className="absolute left-4 top-4">
+            <div className="absolute start-4 top-4">
               <ProductBadges badges={product.badges} max={3} size="default" />
             </div>
           ) : null}
@@ -183,7 +186,7 @@ export function ProductDetailModal({
 
           {/* Variations */}
           {product.variations?.length ? (
-            <Fieldset label="Choose a size">
+            <Fieldset label={m.menu.chooseSize}>
               <div className="flex flex-wrap gap-2">
                 {product.variations.map((v) => {
                   const active = v.id === variationId;
@@ -219,12 +222,12 @@ export function ProductDetailModal({
                 label={group.label}
                 hint={
                   group.required
-                    ? "Required"
+                    ? m.menu.required
                     : group.type === "multiple"
                       ? group.max
-                        ? `Up to ${group.max}`
-                        : "Optional"
-                      : "Optional"
+                        ? fmt(m.menu.upTo, { max: group.max })
+                        : m.menu.optional
+                      : m.menu.optional
                 }
               >
                 <div className="flex flex-wrap gap-2">
@@ -272,7 +275,7 @@ export function ProductDetailModal({
               {product.nutrition && (
                 <div>
                   <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Nutrition (approx.)
+                    {m.menu.nutrition}
                   </p>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
                     {product.nutrition.calories != null && (
@@ -293,7 +296,7 @@ export function ProductDetailModal({
               {product.allergens?.length ? (
                 <div>
                   <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Allergens
+                    {m.menu.allergens}
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {product.allergens.map((a) => (
@@ -314,10 +317,10 @@ export function ProductDetailModal({
             <div className="flex items-center rounded-xl border border-border bg-background">
               <button
                 type="button"
-                aria-label="Decrease quantity"
+                aria-label={m.menu.decreaseQty}
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                 disabled={quantity <= 1 || soldOut}
-                className="grid size-10 place-items-center rounded-l-xl text-foreground transition-colors hover:bg-accent disabled:opacity-40"
+                className="grid size-10 place-items-center rounded-s-xl text-foreground transition-colors hover:bg-accent disabled:opacity-40"
               >
                 <Minus className="size-4" />
               </button>
@@ -326,10 +329,10 @@ export function ProductDetailModal({
               </span>
               <button
                 type="button"
-                aria-label="Increase quantity"
+                aria-label={m.menu.increaseQty}
                 onClick={() => setQuantity((q) => Math.min(20, q + 1))}
                 disabled={soldOut}
-                className="grid size-10 place-items-center rounded-r-xl text-foreground transition-colors hover:bg-accent disabled:opacity-40"
+                className="grid size-10 place-items-center rounded-e-xl text-foreground transition-colors hover:bg-accent disabled:opacity-40"
               >
                 <Plus className="size-4" />
               </button>
@@ -350,7 +353,7 @@ export function ProductDetailModal({
                     exit={{ opacity: 0, y: -6 }}
                     className="inline-flex items-center gap-2"
                   >
-                    <Check className="size-4.5" /> Added
+                    <Check className="size-4.5" /> {m.menu.added}
                   </motion.span>
                 ) : (
                   <motion.span
@@ -361,10 +364,10 @@ export function ProductDetailModal({
                     className="inline-flex items-center gap-2"
                   >
                     {soldOut
-                      ? "Sold out"
+                      ? m.menu.soldOut
                       : comingSoon
-                        ? "Coming soon"
-                        : `Add · ${formatPrice(total, product.currency)}`}
+                        ? m.menu.comingSoon
+                        : `${m.menu.add} · ${formatPrice(total, product.currency)}`}
                   </motion.span>
                 )}
               </AnimatePresence>
@@ -372,7 +375,7 @@ export function ProductDetailModal({
           </div>
           {!soldOut && !comingSoon && (
             <p className="mt-2 text-center text-xs text-muted-foreground">
-              Online ordering coming soon — browse and plan your visit.
+              {m.menu.onlineSoon}
             </p>
           )}
         </div>

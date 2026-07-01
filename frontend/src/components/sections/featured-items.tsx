@@ -8,6 +8,7 @@ import { SectionHeading } from "@/components/common/section-heading";
 import { ProductCard } from "@/components/menu/product-card";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/common/reveal";
+import { useI18n } from "@/components/i18n/locale-provider";
 
 interface FeaturedItemsProps {
   products: Product[];
@@ -15,6 +16,7 @@ interface FeaturedItemsProps {
 }
 
 export function FeaturedItems({ products, categories }: FeaturedItemsProps) {
+  const { m } = useI18n();
   if (!products.length) return null;
   const iconFor = (id: string) => categories.find((c) => c.id === id)?.icon;
 
@@ -24,13 +26,14 @@ export function FeaturedItems({ products, categories }: FeaturedItemsProps) {
         <Reveal>
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
             <SectionHeading
-              eyebrow="Chef's selection"
-              title="Signature favourites"
-              description="A handful of the dishes our regulars keep coming back for."
+              eyebrow={m.home.featured.eyebrow}
+              title={m.home.featured.title}
+              description={m.home.featured.description}
             />
             <Button asChild variant="ghost" className="shrink-0">
               <Link href="/menu?q=signature">
-                See more <ArrowRight className="size-4" />
+                {m.home.featured.seeMore}{" "}
+                <ArrowRight className="size-4 rtl:-scale-x-100" />
               </Link>
             </Button>
           </div>

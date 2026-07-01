@@ -95,7 +95,7 @@ export function Modal({
                     <Dialog.Close asChild>
                       <button
                         aria-label="Close"
-                        className="absolute right-3.5 top-3.5 z-20 grid size-9 place-items-center rounded-full bg-background/70 text-foreground shadow-card backdrop-blur-md transition-all hover:bg-background active:scale-95"
+                        className="absolute end-3.5 top-3.5 z-20 grid size-9 place-items-center rounded-full bg-background/70 text-foreground shadow-card backdrop-blur-md transition-all hover:bg-background active:scale-95"
                       >
                         <X className="size-4.5" />
                       </button>

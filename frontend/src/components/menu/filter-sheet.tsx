@@ -14,6 +14,8 @@ import { Separator } from "@/components/ui/separator";
 import { Icon } from "@/components/common/icon";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
+import { useI18n } from "@/components/i18n/locale-provider";
+import type { Messages } from "@/lib/i18n/messages";
 
 interface FilterSheetProps {
   open: boolean;
@@ -38,18 +40,19 @@ export function FilterSheet({
   onSetAvailableOnly,
   onResetAll,
 }: FilterSheetProps) {
+  const { m, dir } = useI18n();
   return (
     <Sheet
       open={open}
       onOpenChange={onOpenChange}
-      title="Filters"
-      side="right"
+      title={m.menu.filters}
+      side={dir === "rtl" ? "left" : "right"}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-5 pb-4 pt-5">
         <div className="flex items-center gap-2">
           <h2 className="font-display text-xl font-semibold tracking-tight">
-            Filters
+            {m.menu.filters}
           </h2>
           {activeFilterCount > 0 && (
             <span className="grid size-6 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
@@ -62,7 +65,7 @@ export function FilterSheet({
 
       {/* Body */}
       <div className="flex-1 space-y-7 overflow-y-auto px-5 py-6">
-        <FilterGroup title="Sort by">
+        <FilterGroup title={m.menu.sortBy}>
           <div className="grid gap-1.5">
             {SORT_OPTIONS.map((opt) => {
               const active = filters.sort === opt.value;
@@ -78,7 +81,7 @@ export function FilterSheet({
                       : "border-border bg-background hover:bg-accent"
                   )}
                 >
-                  {opt.label}
+                  {m.sort[opt.value]}
                   {active && <Check className="size-4 text-primary" />}
                 </button>
               );
@@ -86,29 +89,31 @@ export function FilterSheet({
           </div>
         </FilterGroup>
 
-        <FilterGroup title="Highlights">
+        <FilterGroup title={m.menu.highlights}>
           <ChipGroup
             badges={HIGHLIGHT_FILTERS}
             selected={filters.badges}
             onToggle={onToggleBadge}
+            m={m}
           />
         </FilterGroup>
 
-        <FilterGroup title="Dietary">
+        <FilterGroup title={m.menu.dietary}>
           <ChipGroup
             badges={DIETARY_FILTERS}
             selected={filters.badges}
             onToggle={onToggleBadge}
+            m={m}
           />
         </FilterGroup>
 
-        <FilterGroup title="Availability">
+        <FilterGroup title={m.menu.availability}>
           <label className="flex items-center justify-between rounded-xl border border-border bg-background px-3.5 py-3 text-sm">
-            <span className="font-medium">Available items only</span>
+            <span className="font-medium">{m.menu.availableOnly}</span>
             <Switch
               checked={filters.availableOnly}
               onCheckedChange={onSetAvailableOnly}
-              aria-label="Show available items only"
+              aria-label={m.menu.availableOnly}
             />
           </label>
         </FilterGroup>
@@ -124,10 +129,10 @@ export function FilterSheet({
           disabled={activeFilterCount === 0}
           className="flex-1"
         >
-          Reset all
+          {m.menu.resetAll}
         </Button>
         <Button size="lg" onClick={() => onOpenChange(false)} className="flex-1">
-          Show {resultCount}
+          {m.menu.show} {resultCount}
         </Button>
       </div>
     </Sheet>
@@ -155,10 +160,12 @@ function ChipGroup({
   badges,
   selected,
   onToggle,
+  m,
 }: {
   badges: ProductBadge[];
   selected: ProductBadge[];
   onToggle: (badge: ProductBadge) => void;
+  m: Messages;
 }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -179,7 +186,7 @@ function ChipGroup({
             )}
           >
             <Icon name={meta.icon} className="size-3.5" />
-            {meta.label}
+            {m.badges[badge]}
           </button>
         );
       })}

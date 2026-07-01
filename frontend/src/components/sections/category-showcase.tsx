@@ -8,6 +8,7 @@ import { SectionHeading } from "@/components/common/section-heading";
 import { CategoryCard } from "@/components/menu/category-card";
 import { Reveal, RevealGroup, revealItemVariants } from "@/components/common/reveal";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/components/i18n/locale-provider";
 import { motion } from "framer-motion";
 
 interface CategoryShowcaseProps {
@@ -15,19 +16,21 @@ interface CategoryShowcaseProps {
 }
 
 export function CategoryShowcase({ categories }: CategoryShowcaseProps) {
+  const { m } = useI18n();
   return (
     <section id="categories" className="py-16 sm:py-20">
       <Container width="wide">
         <Reveal>
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
             <SectionHeading
-              eyebrow="Browse the menu"
-              title="Find your craving"
-              description="From small plates to fire-grilled mains — explore every corner of the kitchen."
+              eyebrow={m.home.categories.eyebrow}
+              title={m.home.categories.title}
+              description={m.home.categories.description}
             />
             <Button asChild variant="ghost" className="shrink-0">
               <Link href="/menu">
-                View all <ArrowRight className="size-4" />
+                {m.home.categories.viewAll}{" "}
+                <ArrowRight className="size-4 rtl:-scale-x-100" />
               </Link>
             </Button>
           </div>

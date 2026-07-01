@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getCategories, getProducts } from "@/services/menu-service";
+import { getServerI18n } from "@/lib/i18n/server";
+import { fmt } from "@/lib/i18n/messages";
 import { Container } from "@/components/common/container";
 import { MenuBrowser } from "@/components/menu/menu-browser";
 
@@ -19,7 +21,8 @@ interface MenuPageProps {
 export default async function MenuPage({ searchParams }: MenuPageProps) {
   const { q, category } = await searchParams;
 
-  const [categories, productsResult] = await Promise.all([
+  const [{ m }, categories, productsResult] = await Promise.all([
+    getServerI18n(),
     getCategories(),
     getProducts(),
   ]);
@@ -35,16 +38,16 @@ export default async function MenuPage({ searchParams }: MenuPageProps) {
       <section className="border-b border-border/60 bg-surface-muted/40">
         <Container width="wide" className="py-10 sm:py-12">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-            The menu
+            {m.menuPage.eyebrow}
           </p>
           <h1 className="mt-2 font-display text-4xl font-semibold tracking-tight sm:text-5xl">
-            Everything we serve
+            {m.menuPage.title}
           </h1>
           <p className="mt-3 max-w-2xl text-pretty text-muted-foreground sm:text-lg">
-            {productsResult.total}+ dishes across {""}
-            {categories.filter((c) => !c.parentId).length} categories. Search by
-            name or ingredient, filter by dietary needs, and tap any dish for the
-            full details.
+            {fmt(m.menuPage.subtitle, {
+              count: productsResult.total,
+              categories: categories.filter((c) => !c.parentId).length,
+            })}
           </p>
         </Container>
       </section>

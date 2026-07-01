@@ -1,124 +1,55 @@
-import Link from "next/link";
-import { Clock, MapPin, Phone } from "lucide-react";
-import { OPENING_HOURS, PRIMARY_NAV, SITE } from "@/constants/site";
+import { MapPin, Phone } from "lucide-react";
+import { SITE } from "@/constants/site";
 import { Container } from "@/components/common/container";
 import { Logo } from "@/components/brand/logo";
-import {
-  FacebookIcon,
-  InstagramIcon,
-  TikTokIcon,
-} from "@/components/brand/social-icons";
+import { InstagramIcon } from "@/components/brand/social-icons";
+import { getServerI18n } from "@/lib/i18n/server";
+import { fmt } from "@/lib/i18n/messages";
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const { m } = await getServerI18n();
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-20 border-t border-border/60 bg-surface-muted/50">
-      <Container width="wide" className="py-14">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
-          {/* Brand */}
-          <div className="lg:col-span-4">
-            <Logo height={36} tone="brand" />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              {SITE.tagline} {SITE.description.split(".")[1]?.trim()}.
-            </p>
-            <div className="mt-5 flex items-center gap-2">
+    <footer className="mt-16 border-t border-border/60 bg-surface-muted/50">
+      <Container width="wide" className="py-6">
+        <div className="flex flex-col items-center gap-x-8 gap-y-4 text-sm text-muted-foreground sm:flex-row sm:flex-wrap sm:justify-between">
+          {/* Brand + social */}
+          <div className="flex items-center gap-4">
+            <Logo height={26} tone="brand" />
+            <div className="flex items-center gap-1.5">
               <SocialLink href={SITE.social.instagram} label="Instagram">
-                <InstagramIcon className="size-4.5" />
-              </SocialLink>
-              <SocialLink href={SITE.social.facebook} label="Facebook">
-                <FacebookIcon className="size-4.5" />
-              </SocialLink>
-              <SocialLink href={SITE.social.tiktok} label="TikTok">
-                <TikTokIcon className="size-4.5" />
+                <InstagramIcon className="size-4" />
               </SocialLink>
             </div>
           </div>
 
-          {/* Explore */}
-          <div className="lg:col-span-2">
-            <FooterHeading>Explore</FooterHeading>
-            <ul className="space-y-2.5">
-              {PRIMARY_NAV.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Visit */}
-          <div className="lg:col-span-3">
-            <FooterHeading>Visit us</FooterHeading>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li className="flex items-start gap-2.5">
-                <MapPin className="mt-0.5 size-4 shrink-0 text-primary" />
-                <span>
-                  {SITE.address.line1}
-                  <br />
-                  {SITE.address.city}, {SITE.address.country}
-                </span>
-              </li>
-              <li className="flex items-center gap-2.5">
+          {/* Contact */}
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5">
+            <span className="inline-flex items-center gap-2">
+              <MapPin className="size-4 shrink-0 text-primary" />
+              {SITE.address.line1}, {SITE.address.city}
+            </span>
+            {SITE.phones.map((phone) => (
+              <a
+                key={phone}
+                href={`tel:${phone.replace(/\s/g, "")}`}
+                dir="ltr"
+                className="inline-flex items-center gap-2 transition-colors hover:text-foreground"
+              >
                 <Phone className="size-4 shrink-0 text-primary" />
-                <a
-                  href={`tel:${SITE.phone.replace(/\s/g, "")}`}
-                  className="transition-colors hover:text-foreground"
-                >
-                  {SITE.phone}
-                </a>
-              </li>
-            </ul>
+                {phone}
+              </a>
+            ))}
           </div>
 
-          {/* Hours */}
-          <div className="lg:col-span-3">
-            <FooterHeading>
-              <Clock className="size-3.5" /> Hours
-            </FooterHeading>
-            <ul className="space-y-1.5 text-sm">
-              {OPENING_HOURS.slice(0, 4).map((h) => (
-                <li
-                  key={h.day}
-                  className="flex justify-between gap-4 text-muted-foreground"
-                >
-                  <span>{h.day}</span>
-                  <span className="tabular-nums">
-                    {h.closed ? "Closed" : `${h.open} – ${h.close}`}
-                  </span>
-                </li>
-              ))}
-              <li className="flex justify-between gap-4 text-muted-foreground">
-                <span>Fri – Sun</span>
-                <span className="tabular-nums">11:00 – late</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-6 sm:flex-row">
-          <p className="text-xs text-muted-foreground">
-            © {year} {SITE.name}. All rights reserved.
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Crafted with care · A premium digital menu experience
+          {/* Copyright */}
+          <p className="text-xs">
+            {fmt(m.footer.rights, { year, name: SITE.name })}
           </p>
         </div>
       </Container>
     </footer>
-  );
-}
-
-function FooterHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <h3 className="mb-4 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-foreground">
-      {children}
-    </h3>
   );
 }
 
@@ -137,7 +68,7 @@ function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="grid size-10 place-items-center rounded-full border border-border/70 bg-background text-foreground/70 transition-colors hover:bg-primary hover:text-primary-foreground"
+      className="grid size-9 place-items-center rounded-full border border-border/70 bg-background text-foreground/70 transition-colors hover:bg-primary hover:text-primary-foreground"
     >
       {children}
     </a>

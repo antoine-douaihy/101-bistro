@@ -1,6 +1,9 @@
+"use client";
+
 import type { AvailabilityStatus } from "@/types/menu";
 import { AVAILABILITY_META } from "@/constants/menu";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/locale-provider";
 
 const TONE_CLASS: Record<string, string> = {
   success: "text-success",
@@ -28,6 +31,7 @@ export function AvailabilityTag({
   className,
   dotOnly,
 }: AvailabilityTagProps) {
+  const { m } = useI18n();
   const meta = AVAILABILITY_META[status];
   if (status === "available" && !dotOnly) return null; // available is the default; no noise
 
@@ -46,7 +50,7 @@ export function AvailabilityTag({
           status === "limited" && "animate-pulse"
         )}
       />
-      {!dotOnly && meta.label}
+      {!dotOnly && m.availability[status]}
     </span>
   );
 }

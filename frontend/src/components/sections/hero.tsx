@@ -4,12 +4,14 @@ import { Container } from "@/components/common/container";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/common/reveal";
 import { Icon } from "@/components/common/icon";
+import { getServerI18n } from "@/lib/i18n/server";
 
 interface HeroProps {
   featuredCategories: { id: string; name: string; icon?: string }[];
 }
 
-export function Hero({ featuredCategories }: HeroProps) {
+export async function Hero({ featuredCategories }: HeroProps) {
+  const { m } = await getServerI18n();
   return (
     <section className="relative overflow-hidden">
       {/* Ambient aurora background */}
@@ -25,9 +27,9 @@ export function Hero({ featuredCategories }: HeroProps) {
         <div className="mx-auto max-w-3xl text-center">
           <Reveal delay={0.06}>
             <h1 className="text-balance font-display text-[2.6rem] font-semibold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
-              A modern bistro,
+              {m.hero.titleLine1}
               <br />
-              <span className="text-gradient-brand">plated with intent.</span>
+              <span className="text-gradient-brand">{m.hero.titleLine2}</span>
             </h1>
           </Reveal>
 
@@ -35,7 +37,8 @@ export function Hero({ featuredCategories }: HeroProps) {
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button asChild size="xl" pill className="w-full sm:w-auto">
                 <Link href="/menu">
-                  Explore the menu <ArrowRight className="size-4.5" />
+                  {m.hero.exploreMenu}{" "}
+                  <ArrowRight className="size-4.5 rtl:-scale-x-100" />
                 </Link>
               </Button>
               <Button
@@ -46,7 +49,7 @@ export function Hero({ featuredCategories }: HeroProps) {
                 className="w-full sm:w-auto"
               >
                 <Link href="#visit">
-                  <MapPin className="size-4.5" /> Find us
+                  <MapPin className="size-4.5" /> {m.hero.findUs}
                 </Link>
               </Button>
             </div>

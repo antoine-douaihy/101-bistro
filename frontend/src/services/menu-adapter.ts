@@ -11,6 +11,7 @@ import type {
   ProductVariation,
 } from "@/types/menu";
 import { slugify } from "@/lib/format";
+import { DEFAULT_LOCALE } from "@/lib/locale";
 
 /**
  * Adapter: backend (Supabase) shape  ->  design/component shape.
@@ -20,33 +21,35 @@ import { slugify } from "@/lib/format";
  * flat domain model in `@/types/menu`. This module is the single translation
  * point between the two, so neither side has to know about the other.
  *
- * To change the displayed language or currency, edit the two constants below.
+ * The displayed language is passed in per request (resolved from the `lang`
+ * cookie in the service layer); everything falls back to English then to the
+ * first available translation, so a missing translation never renders blank.
  */
-const LOCALE: Lang = "en";
 const MENU_CURRENCY: Currency = "USD";
 
 type Translatable = Partial<Record<Lang, { name?: string; description?: string }>>;
 
 function pick(
   translations: Translatable | undefined,
-  field: "name" | "description"
+  field: "name" | "description",
+  locale: Lang
 ): string | undefined {
   if (!translations) return undefined;
   return (
-    translations[LOCALE]?.[field] ??
+    translations[locale]?.[field] ??
     translations.en?.[field] ??
     Object.values(translations)[0]?.[field]
   );
 }
 
-export function mapProduct(p: DbProduct): Product {
-  const name = pick(p.translations, "name") ?? `Item ${p.id}`;
-  const description = pick(p.translations, "description");
+export function mapProduct(p: DbProduct, locale: Lang = DEFAULT_LOCALE): Product {
+  const name = pick(p.translations, "name", locale) ?? `Item ${p.id}`;
+  const description = pick(p.translations, "description", locale);
 
   const variations: ProductVariation[] | undefined = p.variants?.length
     ? p.variants.map((v) => ({
         id: String(v.id),
-        label: pick(v.translations, "name") ?? "Option",
+        label: pick(v.translations, "name", locale) ?? "Option",
         price: v.price ?? 0,
         available: v.status,
       }))
@@ -72,13 +75,13 @@ export function mapProduct(p: DbProduct): Product {
   };
 }
 
-export function mapCategory(c: DbCategory): Category {
-  const name = pick(c.translations, "name") ?? `Category ${c.id}`;
+export function mapCategory(c: DbCategory, locale: Lang = DEFAULT_LOCALE): Category {
+  const name = pick(c.translations, "name", locale) ?? `Category ${c.id}`;
   return {
     id: String(c.id),
     slug: `${slugify(name) || "category"}-${c.id}`,
     name,
-    description: pick(c.translations, "description"),
+    description: pick(c.translations, "description", locale),
     parentId: null,
     order: c.sort_order,
     itemCount: c.products?.length ?? 0,
@@ -92,15 +95,15 @@ export interface MappedMenu {
 }
 
 /** Flattens all active menus into a single category + product catalogue. */
-export function mapMenus(menus: Menu[]): MappedMenu {
+export function mapMenus(menus: Menu[], locale: Lang = DEFAULT_LOCALE): MappedMenu {
   const categories: Category[] = [];
   const products: Product[] = [];
 
   for (const menu of menus ?? []) {
     for (const category of menu.categories ?? []) {
-      categories.push(mapCategory(category));
+      categories.push(mapCategory(category, locale));
       for (const product of category.products ?? []) {
-        products.push(mapProduct(product));
+        products.push(mapProduct(product, locale));
       }
     }
   }

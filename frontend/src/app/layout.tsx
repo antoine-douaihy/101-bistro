@@ -1,25 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
+import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { SITE } from "@/constants/site";
 import { getCategories } from "@/services/menu-service";
+import { getLocale } from "@/lib/locale-server";
+import { localeDir } from "@/lib/locale";
 import { AppProviders } from "@/providers/app-providers";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 
-// Grobek — the 101 Bistro brand typeface. Self-hosted via next/font/local and
-// used across the whole site for both body (--font-sans) and display headings
-// (--font-display); see the theme mapping in globals.css.
-const grobek = localFont({
-  src: [
-    { path: "./fonts/grobek/grobek-light.otf", weight: "300", style: "normal" },
-    { path: "./fonts/grobek/grobek-regular.otf", weight: "400", style: "normal" },
-    { path: "./fonts/grobek/grobek-medium.otf", weight: "500", style: "normal" },
-    { path: "./fonts/grobek/grobek-bold.otf", weight: "700", style: "normal" },
-    { path: "./fonts/grobek/grobek-black.otf", weight: "900", style: "normal" },
-  ],
-  variable: "--font-grobek",
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
   display: "swap",
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -67,17 +67,19 @@ export const viewport: Viewport = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const categories = await getCategories();
+  const [locale, categories] = await Promise.all([getLocale(), getCategories()]);
+  const dir = localeDir(locale);
 
   return (
     <html
-      lang="en"
+      lang={locale}
+      dir={dir}
       suppressHydrationWarning
-      className={`${grobek.variable} antialiased`}
+      className={`${inter.variable} ${fraunces.variable} antialiased`}
     >
       <body className="flex min-h-dvh flex-col bg-background text-foreground">
-        <AppProviders categories={categories}>
-          <SiteHeader categories={categories} />
+        <AppProviders categories={categories} locale={locale}>
+          <SiteHeader categories={categories} locale={locale} />
           <main className="flex-1">{children}</main>
           <SiteFooter />
         </AppProviders>

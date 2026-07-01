@@ -1,22 +1,19 @@
 import {
   getCategories,
-  getCatalogueStats,
   getFeaturedProducts,
 } from "@/services/menu-service";
 import { Hero } from "@/components/sections/hero";
 import { CategoryShowcase } from "@/components/sections/category-showcase";
 import { FeaturedItems } from "@/components/sections/featured-items";
 import { VisitSection } from "@/components/sections/visit-section";
-import { HomeCta } from "@/components/sections/home-cta";
 
 // Rendered per-request so it always reflects the live menu in the database.
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [categories, featured, stats] = await Promise.all([
+  const [categories, featured] = await Promise.all([
     getCategories(),
     getFeaturedProducts(10),
-    getCatalogueStats(),
   ]);
 
   const topLevel = categories
@@ -34,7 +31,6 @@ export default async function HomePage() {
       <CategoryShowcase categories={topLevel} />
       <FeaturedItems products={featured} categories={categories} />
       <VisitSection />
-      <HomeCta productCount={stats.productCount} />
     </>
   );
 }
