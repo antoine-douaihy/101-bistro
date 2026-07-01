@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "101-bistro",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-03-25",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Public Supabase config (the anon/publishable key is safe to expose — it is
+  // shipped to the browser too). Available to server code at runtime.
+  // The service-role key is NOT here — set it as a secret:
+  //   npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+  "vars": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://zopihtwnnjyetqyhemlb.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_HKB6h6kb31yjc8PY_M35IA_oL-GOHAq"
+  }
+}
