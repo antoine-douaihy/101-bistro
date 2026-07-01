@@ -9,7 +9,6 @@ import { useI18n } from "@/components/i18n/locale-provider";
 import { fmt } from "@/lib/i18n/messages";
 import { Modal } from "@/components/ui/modal";
 import { Badge } from "@/components/ui/badge";
-import { MaterialIcon } from "@/components/common/icon";
 import { ProductImage } from "./product-image";
 import { ProductBadges } from "./product-badges";
 import { AvailabilityTag } from "./availability-tag";
@@ -112,8 +111,7 @@ export function ProductDetailModal({
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto px-5 pb-4 pt-1 sm:px-7">
           {category && (
-            <div className="mb-2 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-primary">
-              <MaterialIcon name={category.icon} className="size-3.5 text-sm" />
+            <div className="mb-2 inline-flex items-center text-xs font-medium uppercase tracking-wide text-primary">
               {category.name}
             </div>
           )}

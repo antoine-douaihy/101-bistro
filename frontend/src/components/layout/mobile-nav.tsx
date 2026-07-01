@@ -8,7 +8,7 @@ import { Sheet } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Logo } from "@/components/brand/logo";
-import { Icon } from "@/components/common/icon";
+import { MaterialIcon } from "@/components/common/icon";
 import { useI18n } from "@/components/i18n/locale-provider";
 
 interface MobileNavProps {
@@ -63,7 +63,7 @@ export function MobileNav({ open, onOpenChange, categories }: MobileNavProps) {
               className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-accent"
             >
               <span className="grid size-9 place-items-center rounded-lg bg-surface-muted text-primary">
-                <Icon name={c.icon} className="size-4.5" />
+                <MaterialIcon name={c.icon} className="size-4.5 text-lg" />
               </span>
               <span className="flex-1 text-sm font-medium">{c.name}</span>
               {c.itemCount != null && (

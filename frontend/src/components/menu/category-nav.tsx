@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import type { Category } from "@/types/menu";
-import { MaterialIcon } from "@/components/common/icon";
 import { cn } from "@/lib/utils";
 
 interface CategoryNavProps {
@@ -63,7 +62,6 @@ export function CategoryNav({
           active={activeId === category.id}
           onClick={() => onSelect(category.id)}
           label={category.name}
-          iconName={category.icon}
           count={category.itemCount}
         />
       ))}
@@ -77,10 +75,9 @@ const CategoryPill = React.forwardRef<
     active: boolean;
     onClick: () => void;
     label: string;
-    iconName?: string;
     count?: number;
   }
->(({ active, onClick, label, iconName, count }, ref) => (
+>(({ active, onClick, label, count }, ref) => (
   <button
     ref={ref}
     type="button"
@@ -94,9 +91,6 @@ const CategoryPill = React.forwardRef<
         : "border-border/70 bg-background/60 text-foreground/80 backdrop-blur-sm hover:border-border hover:bg-accent hover:text-foreground"
     )}
   >
-    {iconName && (
-      <MaterialIcon name={iconName} className="size-4 text-base opacity-80" />
-    )}
     {label}
     {count != null && (
       <span
