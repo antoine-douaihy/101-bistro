@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Category } from "@/types/menu";
-import { PRIMARY_NAV, SITE } from "@/constants/site";
+import { PRIMARY_NAV } from "@/constants/site";
 import { Sheet } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -83,9 +83,6 @@ export function MobileNav({ open, onOpenChange, categories }: MobileNavProps) {
             {m.nav.exploreFull} <ArrowRight className="size-4 rtl:-scale-x-100" />
           </Link>
         </Button>
-        <p className="text-center text-xs text-muted-foreground">
-          {SITE.address.line1}, {SITE.address.city}
-        </p>
       </div>
     </Sheet>
   );

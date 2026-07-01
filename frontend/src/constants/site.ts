@@ -40,7 +40,6 @@ export const SITE = {
 export const PRIMARY_NAV: NavItem[] = [
   { label: "Home", href: "/", key: "home" },
   { label: "Menu", href: "/menu", key: "menu" },
-  { label: "Visit", href: "/#visit", key: "visit" },
 ];
 
 export const OPENING_HOURS: OpeningHours[] = [

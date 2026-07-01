@@ -12,6 +12,8 @@ const CATEGORY_ICON_MAP: Record<string, string> = {
   "oriental food": "washoku",
   "pizza": "local_pizza",
   "pasta": "dinner_dining",
+  "sandwich": "fastfood",
+  "sandwiches": "fastfood",
   // "entree" intentionally omitted — keep the default icon.
   "sauces": "skillet",
   "shots": "liquor",
