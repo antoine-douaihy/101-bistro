@@ -81,22 +81,6 @@ export default async function RootLayout({
       className={`${inter.variable} ${fraunces.variable} antialiased`}
     >
       <body className="flex min-h-dvh flex-col bg-background text-foreground">
-        {/* React hoists these into <head>. Loads Google Material Symbols for the
-            data-driven category icons. Axes are pinned to the single values we
-            actually render (opsz 24, wght 400, FILL 0, GRAD 0) — this serves a
-            ~320 KB static font instead of the ~4 MB variable one. `display=block`
-            avoids briefly flashing the raw ligature text before the font loads. */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="stylesheet"
-          precedence="default"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block"
-        />
         <AppProviders categories={categories} locale={locale}>
           <SiteHeader categories={categories} locale={locale} />
           <main className="flex-1">{children}</main>

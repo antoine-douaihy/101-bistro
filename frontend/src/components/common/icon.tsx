@@ -21,7 +21,7 @@ import {
   Wheat,
   type LucideIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { MATERIAL_SYMBOL_PATHS } from "@/lib/material-symbol-paths";
 
 /**
  * Curated icon registry for data-driven names (categories & badges). Explicit
@@ -67,19 +67,24 @@ export function getIcon(name?: string): LucideIcon {
 }
 
 /**
- * Renders a Google Material Symbols icon by name (via the
- * `material-symbols-outlined` font). Glyph size follows the `font-size` set by
- * the class name, so pass a `text-*` utility alongside any `size-*`/color
- * classes. Falls back to a Lucide icon when no name is provided.
+ * Renders a Material Symbols icon by name as an inline SVG (paths are bundled —
+ * no web font, so icons paint instantly with the HTML). Size comes from `size-*`
+ * classes; color follows the text color via `currentColor`. Falls back to a
+ * Lucide icon when the name is missing or unknown.
  */
 export function MaterialIcon({ name, className, fallback = Utensils }: IconProps) {
-  if (!name) {
+  const path = name ? MATERIAL_SYMBOL_PATHS[name] : undefined;
+  if (!path) {
     const Cmp = fallback;
     return <Cmp className={className} aria-hidden />;
   }
   return (
-    <span className={cn("material-symbols-outlined", className)} aria-hidden>
-      {name}
-    </span>
+    <svg
+      viewBox="0 -960 960 960"
+      className={className}
+      fill="currentColor"
+      aria-hidden
+      dangerouslySetInnerHTML={{ __html: path }}
+    />
   );
 }
